@@ -33,6 +33,116 @@ impl std::fmt::Display for AdrowseError {
     }
 }
 
+impl From<AdrowseError> for String {
+    fn from(_value: AdrowseError) -> Self {
+        match _value {
+            AdrowseError::TemplateNotFound(err) => {
+                eprintln!("ADR template not found at '{}'.", &err.path);
+                format!("ADR template not found at '{}'.", &err.path)
+            }
+        }
+    }
+}
+
+impl std::error::Error for AdrowseError {}
+impl std::fmt::Display for AdrowseError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            AdrowseError::TemplateNotFound(_) => write!(f, "ADR template not found"),
+        }
+    }
+}
+
+struct TemplateStruct {
+    cy: [&'static str; 7],
+    en: [&'static str; 7],
+    es: [&'static str; 7],
+    fr: [&'static str; 7],
+    ja: [&'static str; 7],
+    ko: [&'static str; 7],
+}
+
+impl TemplateStruct {
+    fn get_templates(&self, lang: &str) -> Result<&[&'static str; 7], &'static str> {
+        match lang {
+            "cy" => Ok(&self.cy),
+            "en" => Ok(&self.en),
+            "es" => Ok(&self.es),
+            "fr" => Ok(&self.fr),
+            "ja" => Ok(&self.ja),
+            "ko" => Ok(&self.ko),
+            _ => Err("not valid lang"),
+        }
+    }
+}
+
+const TEMPLATES_INDEX: [&'static str; 7] = [
+    "decision-record-template-by-edgex",
+    "decision-record-template-by-jeff-tyree-and-art-akerman",
+    "decision-record-template-by-michael-nygard",
+    "decision-record-template-for-alexandrian-pattern",
+    "decision-record-template-for-business-case",
+    "decision-record-template-of-the-madr-project",
+    "decision-record-template-using-planguage",
+];
+
+const TEMPLATES: TemplateStruct = TemplateStruct {
+    cy: [
+        include_str!("locales/cy/decision-record-template-by-edgex.md"),
+        include_str!("locales/cy/decision-record-template-by-jeff-tyree-and-art-akerman.md"),
+        include_str!("locales/cy/decision-record-template-by-michael-nygard.md"),
+        include_str!("locales/cy/decision-record-template-for-alexandrian-pattern.md"),
+        include_str!("locales/cy/decision-record-template-for-business-case.md"),
+        include_str!("locales/cy/decision-record-template-of-the-madr-project.md"),
+        include_str!("locales/cy/decision-record-template-using-planguage.md"),
+    ],
+    en: [
+        include_str!("locales/en/decision-record-template-by-edgex.md"),
+        include_str!("locales/en/decision-record-template-by-jeff-tyree-and-art-akerman.md"),
+        include_str!("locales/en/decision-record-template-by-michael-nygard.md"),
+        include_str!("locales/en/decision-record-template-for-alexandrian-pattern.md"),
+        include_str!("locales/en/decision-record-template-for-business-case.md"),
+        include_str!("locales/en/decision-record-template-of-the-madr-project.md"),
+        include_str!("locales/en/decision-record-template-using-planguage.md"),
+    ],
+    es: [
+        include_str!("locales/es/decision-record-template-by-edgex.md"),
+        include_str!("locales/es/decision-record-template-by-jeff-tyree-and-art-akerman.md"),
+        include_str!("locales/es/decision-record-template-by-michael-nygard.md"),
+        include_str!("locales/es/decision-record-template-for-alexandrian-pattern.md"),
+        include_str!("locales/es/decision-record-template-for-business-case.md"),
+        include_str!("locales/es/decision-record-template-of-the-madr-project.md"),
+        include_str!("locales/es/decision-record-template-using-planguage.md"),
+    ],
+    fr: [
+        include_str!("locales/fr/decision-record-template-by-edgex.md"),
+        include_str!("locales/fr/decision-record-template-by-jeff-tyree-and-art-akerman.md"),
+        include_str!("locales/fr/decision-record-template-by-michael-nygard.md"),
+        include_str!("locales/fr/decision-record-template-for-alexandrian-pattern.md"),
+        include_str!("locales/fr/decision-record-template-for-business-case.md"),
+        include_str!("locales/fr/decision-record-template-of-the-madr-project.md"),
+        include_str!("locales/fr/decision-record-template-using-planguage.md"),
+    ],
+    ja: [
+        include_str!("locales/ja/decision-record-template-by-edgex.md"),
+        include_str!("locales/ja/decision-record-template-by-jeff-tyree-and-art-akerman.md"),
+        include_str!("locales/ja/decision-record-template-by-michael-nygard.md"),
+        include_str!("locales/ja/decision-record-template-for-alexandrian-pattern.md"),
+        include_str!("locales/ja/decision-record-template-for-business-case.md"),
+        include_str!("locales/ja/decision-record-template-of-the-madr-project.md"),
+        include_str!("locales/ja/decision-record-template-using-planguage.md"),
+    ],
+    ko: [
+        include_str!("locales/ko/decision-record-template-by-edgex.md"),
+        include_str!("locales/ko/decision-record-template-by-jeff-tyree-and-art-akerman.md"),
+        include_str!("locales/ko/decision-record-template-by-michael-nygard.md"),
+        include_str!("locales/ko/decision-record-template-for-alexandrian-pattern.md"),
+        include_str!("locales/ko/decision-record-template-for-business-case.md"),
+        include_str!("locales/ko/decision-record-template-of-the-madr-project.md"),
+        include_str!("locales/ko/decision-record-template-using-planguage.md"),
+    ],
+};
+
 #[derive(Parser, Debug, Clone)]
 pub struct GlobalArgs {
     #[arg(default_value = ".adr/config", global = true, long)]

@@ -1,7 +1,10 @@
 use clap::{Parser, Subcommand};
+use serde::{Deserialize, Serialize};
 use std::fs;
 use std::io::Write;
 use std::path::Path;
+
+use dialoguer::{Input, Select};
 
 #[derive(Debug)]
 pub struct TemplateNotFoundError {
@@ -11,26 +14,6 @@ pub struct TemplateNotFoundError {
 #[derive(Debug)]
 enum AdrowseError {
     TemplateNotFound(TemplateNotFoundError),
-}
-
-impl From<AdrowseError> for String {
-    fn from(_value: AdrowseError) -> Self {
-        match _value {
-            AdrowseError::TemplateNotFound(err) => {
-                eprintln!("ADR template not found at '{}'.", &err.path);
-                format!("ADR template not found at '{}'.", &err.path)
-            }
-        }
-    }
-}
-
-impl std::error::Error for AdrowseError {}
-impl std::fmt::Display for AdrowseError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            AdrowseError::TemplateNotFound(_) => write!(f, "ADR template not found"),
-        }
-    }
 }
 
 impl From<AdrowseError> for String {

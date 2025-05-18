@@ -52,6 +52,38 @@ impl Default for Config {
     }
 }
 
-fn main() {
-    println!("Hello, world!");
+fn init(arg: Cli) -> std::io::Result<()> {
+    let config_path = Path::new(&arg.global_args.config_path);
+
+    if !config_path.exists() {
+        let config = Config::default();
+        let toml = toml::to_string(&config).unwrap();
+        if config_path.parent().is_some() {
+            fs::create_dir_all(config_path.parent().unwrap())?;
+        }
+        let mut file = fs::File::create(config_path)?;
+        file.write_all(toml.as_bytes())?;
+        println!(
+            "Created default configuration file at '{}'.",
+            config_path.display()
+        );
+        Ok(())
+    } else {
+        println!(
+            "Configuration file '{}' already exists.",
+            config_path.display()
+        );
+        Ok(())
+    }
+}
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let args = Cli::parse();
+
+    match args.command {
+        Commands::Add(arg) => add(arg)?,
+        Commands::Init => init(args)?,
+    };
+
+    Ok(())
 }

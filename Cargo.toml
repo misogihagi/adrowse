@@ -2,6 +2,12 @@
 name = "adrowse"
 version = "0.1.0"
 edition = "2024"
+authors    = ["misogihagi"]
+categories = ["development-tools", "command-line-utilities"]
+homepage   = "https://github.com/misogihagi/adrowse"
+keywords   = ["ADR (Architectural Decision Records)", "Architectural Design", "Decision Making" "Development Process", "Documentation"]
+license = "MIT OR Apache-2.0"
+repository   = "https://github.com/misogihagi/adrowse"
 
 [dependencies]
 clap = { version = "4.5.38", features = ["derive"] }
